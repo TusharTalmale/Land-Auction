@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+/* @layer utilities {
+  .image-upload>input {
+  display: none;
+  }
+}  */
+
+
+
+.image-upload>input {
+  display: none;
+  }
+
+
+  input[type='radio']{
+  visibility: hidden;
+}
+
+input[type='radio']:after {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  outline:solid 1px black;
+}
+
+input[type='radio']:checked:after {
+  background-color: #9540A6;
+}
+
+/* filters underline */
+.MuiTabs-scroller > span {
+  background-color:#B37ECF;
+  height: 4px;
+}
+
+.css-1wf8b0h-MuiTabs-flexContainer > button {
+  text-transform: none;
+  font-size: medium;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.MuiInputLabel-root{
+  background-color: inherit;
+  border-radius: 4px;
+}
+

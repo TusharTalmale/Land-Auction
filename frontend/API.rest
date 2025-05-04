@@ -1,0 +1,183 @@
+###
+GET http://localhost:4000/rest/auctionItem/{id}
+
+###
+GET http://localhost:4000/rest/auctionItem/filtered/{filter}
+
+###
+GET http://localhost:4000/rest/auctionItem/{id}
+
+###
+POST http://localhost:4000/rest/auctionItem
+
+###
+GET http://localhost:4000/rest/user
+
+###
+POST http://localhost:4000/rest/user
+Content-Type: application/json
+
+{
+  "email": "user3@haha.se",
+  "username": "user3",
+  "password": "123",
+  "role": "private",
+  "orgName": null,
+  "orgNr": null,
+  "websocketId": null
+}
+
+<> 2021-10-28T144203.200.json
+
+###
+POST http://localhost:4000/rest/auctionItem
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "categoryId": 1,
+  "description": "beautiful shoes",
+  "title": "Hugos gamla sneakers",
+  "startTime": 1700000000,
+  "endTime": 1800000000,
+  "currentBid": 5000,
+  "startPrice": 100,
+  "currentViews": 50,
+  "numberOfBids": 22
+}
+
+<> 2021-10-28T122523.200.json
+<> 2021-10-28T122251.200.json
+<> 2021-10-28T122201.200.json
+
+###
+GET http://localhost:4000/rest/auctionItem
+
+<> 2021-10-28T122611.200.json
+
+//Add mockdata
+###
+POST http://localhost:4000/rest/auctionItem/s
+Content-Type: application/json
+
+[
+{
+  "userId": 2,
+  "categoryId": 1,
+  "description": "ugly shoes",
+  "title": "Hugos nya tofflor",
+  "startTime": 1700000000,
+  "endTime": 1800000000,
+  "currentBid": 500,
+  "startPrice": 10,
+  "currentViews": 35,
+  "numberOfBids": 12
+},
+{
+  "userId": 2,
+  "categoryId": 1,
+  "description": "mediocre shoes",
+  "title": "Lukas gamla sneakers",
+  "startTime": 1700000000,
+  "endTime": 1800000000,
+  "currentBid": 800,
+  "startPrice": 120,
+  "currentViews": 100,
+  "numberOfBids": 3
+}
+]
+
+###
+POST http://localhost:4000/rest/category
+Content-Type: application/json
+
+{
+  "name": "Accessories"
+}
+
+<> 2021-10-28T141000.200.json
+<> 2021-10-28T140908.405.json
+<> 2021-10-28T140812.405.json
+
+###
+GET http://localhost:4000/rest/category
+
+<> 2021-10-28T141137.200.json
+
+###
+POST http://localhost:4000/rest/image
+Content-Type: application/json
+
+{
+  "pinned": true,
+  "itemId": 3
+}
+
+<> 2021-10-28T143603.200.json
+<> 2021-10-28T142201.200.json
+<> 2021-10-28T142053.200.json
+<> 2021-10-28T142035.405.json
+
+###
+GET http://localhost:4000/rest/image
+
+<> 2021-10-28T143546.200.json
+<> 2021-10-28T143239.500.json
+<> 2021-10-28T142850.500.json
+<> 2021-10-28T142735.500.json
+<> 2021-10-28T142713.500.json
+<> 2021-10-28T142546.500.json
+<> 2021-10-28T142501.500.json
+<> 2021-10-28T142434.500.json
+<> 2021-10-28T142416.500.json
+
+###
+POST http://localhost:4000/rest/message
+Content-Type: application/json
+
+{
+  "senderId": 2,
+  "receiverId": 8,
+  "timestamp": 1600000000,
+  "messageContent": "Hello User3, My name is User2"
+}
+
+<> 2021-10-28T144408.200.json
+<> 2021-10-28T144355.405.json
+
+###
+GET http://localhost:4000/rest/message
+
+<> 2021-10-28T144429.200.json
+
+###
+POST http://localhost:4000/rest/notification
+Content-Type: application/json
+
+{
+  "itemId": 3,
+  "messageId": 9,
+  "userId": 8
+}
+
+<> 2021-10-28T144903.200.json
+
+###
+GET http://localhost:4000/rest/notification
+
+<> 2021-10-28T144915.200.json
+
+###
+POST http://localhost:4000/rest/tag
+Content-Type: application/json
+
+{
+  "name": "Vintage"
+}
+
+<> 2021-10-28T145154.200.json
+
+###
+GET http://localhost:4000/rest/tag
+
+<> 2021-10-28T145206.200.json
