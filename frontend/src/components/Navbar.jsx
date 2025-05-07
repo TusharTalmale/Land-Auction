@@ -176,10 +176,10 @@ export default function Navbar() {
               <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                 {currentUser ? (
                   <>
-                    <div className="px-4 py-3 border-b border-gray-200">
+                    {/* <div className="px-4 py-3 border-b border-gray-200" name = "me" onClick={(e)=> history.push(`/me`)}> */}
                       <p className="text-sm font-medium text-gray-900">{currentUser.username}</p>
                       <p className="text-xs font-medium text-gray-500 truncate">{currentUser.email}</p>
-                    </div>
+                    {/* </div> */}
                     {pagesArray.map((page, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (

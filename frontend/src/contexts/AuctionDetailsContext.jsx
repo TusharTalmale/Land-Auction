@@ -11,8 +11,13 @@ export default function AuctionDetailsProvider(props) {
 
   const fetchAuctionItem = async (id) => {
     let res = await fetch(`/rest/auctionItem/${id}`)
+    console.log(res)
+
     res = await res.json()
+    console.log(res)
+
     setAuctionItem(res)
+    
   }
 
   const fetchFilteredAuctionItems = async (obj) => {

@@ -25,6 +25,9 @@ import { MessagesPage } from "./pages/Messages";
 import { API } from "./pages/API";
 import About from "./pages/About";
 import Footer from "./components/Footer";
+// import { LandAuctionDetails } from "./pages/LandAuctionDetails";
+// import { UserProfilePage } from "./pages/Userpage";
+
 
 function App() {
 
@@ -43,6 +46,8 @@ function App() {
                       <Switch>
                         <Route exact path="/" component={Home} />
                         <Route exact path="/auction-details/:id" component={AuctionDetails} />
+                        {/* <Route exact path="/land-details/:id" component={LandAuctionDetails} /> */}
+
                         <Route exact path="/registration" component={Registration} />
                         <Route exact path="/Buying" component={Buying} />
                         <Route exact path="/Messages" component={MessagesPage} />
@@ -51,6 +56,7 @@ function App() {
                         <Route exact path="/Create" component={CreateListing} />
                         <Route exact path="/About" component={About} />
                         <Route exact path="/API" component={API} />
+                        {/* <Route exact path="/me" component={UserProfilePage} /> */}
                         <Route path="*" component={NotFound404} />
                       </Switch>
                       <Footer/>

@@ -10,7 +10,9 @@ export default function MessageProvider(props) {
     
     try {
       let res = await fetch(`/rest/conversation/${itemId}/${userId}`)
+      console.log('before res ',res);
         res = await res.json();
+        console.log('After res ',res);
         setMessages(res);
       
     } catch (e) {
@@ -36,6 +38,7 @@ export default function MessageProvider(props) {
   const values = {
     messages,
     messagesList,
+    setMessages,
     fetchMessages,
     fetchMessagesList
   }
