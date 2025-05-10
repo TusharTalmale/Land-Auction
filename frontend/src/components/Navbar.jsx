@@ -9,6 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useHistory } from "react-router-dom";
 import { NotificationContext } from "../contexts/NotificationContext";
 import { socket } from "../socket";
+import logo from "../images/Logo1.png";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -75,7 +76,8 @@ export default function Navbar() {
         <div className="relative flex items-center justify-between h-16">
           <div className="flex-1 flex items-center justify-start">
             <div className="flex-shrink-0 flex items-center">
-              <button
+            <img src={logo} alt="LAWA Logo" className="h-16 mt-3 rounded-full" />
+            <button
                 onClick={pathTo}
                 id="logo"
                 className="font-logo text-3xl text-white hover:text-indigo-200 transition-colors duration-200"
@@ -176,10 +178,10 @@ export default function Navbar() {
               <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                 {currentUser ? (
                   <>
-                    {/* <div className="px-4 py-3 border-b border-gray-200" name = "me" onClick={(e)=> history.push(`/me`)}> */}
+                    <div className="px-4 py-3 border-b border-gray-200" name = "me" onClick={(e)=> history.push(`/me`)}>
                       <p className="text-sm font-medium text-gray-900">{currentUser.username}</p>
                       <p className="text-xs font-medium text-gray-500 truncate">{currentUser.email}</p>
-                    {/* </div> */}
+                    </div>
                     {pagesArray.map((page, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (

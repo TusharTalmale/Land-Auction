@@ -21,7 +21,7 @@ public class AuctionItem {
     private long id;
     private long userId;
     private long categoryId;
-    private String description;
+
     private String title;
     private long startTime;
     private long endTime;
@@ -30,29 +30,52 @@ public class AuctionItem {
     private int currentViews;
     private String imagePath;
 
+    private String plotSize; // Storing as String based on frontend, consider a better type if possible
+    private String plotFacing;
+    private String address;
+    private String city;
+    private String state;
+    private String pinCode; // Storing as String
+    private String landmarks;
+    private String ownershipType;
+    private Double latitude;
+    private Double longitude;
 
-    private boolean isActive(){
+
+    public boolean isActive(){
         return this.endTime > new Date().getTime();
     }
 
+
     public String toJson(int highestBid, int numberOfBids, boolean winner) {
         return "{" +
-                "\"id\":\""+this.id+"\", " +
-                "\"userId\":\""+this.userId+"\", " +
-                "\"categoryId\":\""+this.categoryId+"\", " +
-                "\"description\":\""+this.description+"\", " +
-                "\"title\":\""+this.title+"\", " +
-                "\"startTime\":\""+this.startTime+"\", " +
-                "\"endTime\":\""+this.endTime+"\", " +
-                "\"startPrice\":\""+this.startPrice+"\", " +
-                "\"buyNowPrice\":\""+this.buyNowPrice+"\", " +
-                "\"currentViews\":\""+this.currentViews+"\", " +
-                "\"imagePath\":\""+this.imagePath+"\", " +
-                "\"highestBid\":\""+highestBid+"\", " +
-                "\"numberOfBids\":\""+numberOfBids+"\", " +
-                "\"winner\":\""+winner+"\"" +
+                "\"id\":\"" + id + "\", " +
+                "\"userId\":\"" + userId + "\", " +
+                "\"categoryId\":\"" + categoryId + "\", " +
+                "\"title\":\"" + title + "\", " +
+                "\"startTime\":\"" + startTime + "\", " +
+                "\"endTime\":\"" + endTime + "\", " +
+                "\"startPrice\":\"" + startPrice + "\", " +
+                "\"buyNowPrice\":\"" + buyNowPrice + "\", " +
+                "\"currentViews\":\"" + currentViews + "\", " +
+                "\"imagePath\":\"" + imagePath + "\", " +
+                "\"plotSize\":\"" + plotSize + "\", " +
+                "\"plotFacing\":\"" + plotFacing + "\", " +
+                "\"address\":\"" + address + "\", " +
+                "\"city\":\"" + city + "\", " +
+                "\"state\":\"" + state + "\", " +
+                "\"pinCode\":\"" + pinCode + "\", " +
+                "\"landmarks\":\"" + landmarks + "\", " +
+                "\"ownershipType\":\"" + ownershipType + "\", " +
+                "\"latitude\":\"" + latitude + "\", " +
+                "\"longitude\":\"" + longitude + "\", " +
+                "\"highestBid\":\"" + highestBid + "\", " +
+                "\"numberOfBids\":\"" + numberOfBids + "\", " +
+                "\"winner\":\"" + winner + "\"" +
                 "}";
     }
+
+
     public String buyingToJson(int highestBid, int userBid) {
         return "{" +
                 "\"id\":\""+this.id+"\", " +

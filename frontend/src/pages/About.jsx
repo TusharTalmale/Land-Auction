@@ -31,21 +31,28 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-800 py-16 px-4 sm:px-6 lg:px-8 " style={{
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('src/images/createback.jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat'
+    }}
+    >
       <div className="max-w-6xl mx-auto space-y-16">
 
         {/* Header Section */}
-        <header className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-4">
+        <header className="text-center  bg-gray-800 text-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg mx-auto">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text while text-slate-900 mb-4">
             About LAWA
           </h1>
-          <p className="text-lg sm:text-xl text-slate-600">
+          <p className="text-lg sm:text-xl text while text-slate-600"  >
             Learn more about the Land Auction Web Application, a final year project by Group 7 from the Government College of Engineering, Yavatmal.
           </p>
         </header>
 
         {/* Project & Team Section */}
-        <section className="bg-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg">
+        <section className="bg-gray-800 text-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
 
             {/* Column 1: Project Details & Team Info */}
@@ -77,7 +84,7 @@ export default function AboutPage() {
               </div>
 
               {/* Divider */}
-              <hr className="border-slate-200" />
+              <hr className=" border-slate-200" />
 
               {/* Team Info */}
               <div>
@@ -121,21 +128,21 @@ export default function AboutPage() {
                  />
                </div>
                {/* Optional caption for the photo */}
-               {/* <p className="text-center text-sm text-slate-500 mt-3">Group 7 - Final Year Project</p> */}
+               <p className="text-center text-sm text-slate-500 mt-3">Group 7 - Final Year Project</p>
             </div>
 
           </div>
         </section>
 
         {/* Project Purpose Section */}
-        <section className="bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg">
+        <section className="bg-gray-800 text-white p-6 sm:p-8 lg:p-10 rounded-xl shadow-lg">
            <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
              Project Purpose
            </h2>
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
              {projectPurposes.map(purpose => (
                <div key={purpose.title} className="flex flex-col items-center space-y-3">
-                 <div className={`bg-white p-3 rounded-full shadow-md ${purpose.iconColor}`}>
+                 <div className={`bg-gray-800 p-3 rounded-full shadow-md ${purpose.iconColor}`}>
                    <purpose.Icon style={{ fontSize: '2rem' }} /> {/* Adjust icon size if needed */}
                  </div>
                  <h3 className="text-xl font-semibold text-slate-800">{purpose.title}</h3>

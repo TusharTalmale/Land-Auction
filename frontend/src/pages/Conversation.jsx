@@ -12,10 +12,15 @@ export const Conversation = () => {
   const { messages, setMessages } = useContext(MessageContext);
   const { currentUser } = useContext(UserContext);
   const [textMsg, setTextMsg] = useState("");
+  const [sendername , setSendername] = useState("");
+
+  const [contenttitle , setContenttitle] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const abortControllerRef = useRef(new AbortController());
+  const lastMessageRef = useRef(null);
 
   const fetchConversation = useCallback(async () => {
     abortControllerRef.current.abort();
@@ -33,7 +38,6 @@ export const Conversation = () => {
         }
       });
 
-      // First check if response is HTML (error page)
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.indexOf('text/html') !== -1) {
         const text = await response.text();
@@ -41,12 +45,8 @@ export const Conversation = () => {
       }
 
       if (!response.ok) {
-        try {
-          const errorData = await response.json();
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        } catch {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -55,6 +55,8 @@ export const Conversation = () => {
       }
       
       setMessages(data.messages);
+      setSendername(data.username);
+      setContenttitle(data.title);
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error('Fetch error:', err);
@@ -74,26 +76,40 @@ export const Conversation = () => {
     return () => abortControllerRef.current.abort();
   }, [itemId, userId, fetchConversation]);
 
+  const scrollToLastMessage = useCallback(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }, []);
+
+  // Initial scroll to last message on load
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(scrollToLastMessage, 100);
+    }
+  }, [messages.length, scrollToLastMessage]);
+
+  // Handle new messages with scroll
   useEffect(() => {
     if (!currentUser) return;
+    
     const handleNewMessage = (newMessage) => {
-      if (!currentUser) return;
       if (
-        (currentUser?.id === newMessage.senderId || 
-         currentUser?.id === newMessage.receiverId) &&
+        (currentUser.id === newMessage.senderId || 
+         currentUser.id === newMessage.receiverId) &&
         newMessage.itemId?.toString() === itemId
       ) {
         setMessages(prev => [...prev, newMessage]);
+        setTimeout(scrollToLastMessage, 50);
       }
     };
 
     socket.on("messageUp", handleNewMessage);
     return () => socket.off("messageUp", handleNewMessage);
-  }, [currentUser?.id, itemId, setMessages]);
-
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
+  }, [currentUser, itemId, setMessages, scrollToLastMessage]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -114,7 +130,6 @@ export const Conversation = () => {
         credentials: 'include'
       });
 
-      // Check for HTML error response
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.indexOf('text/html') !== -1) {
         const text = await response.text();
@@ -153,55 +168,68 @@ export const Conversation = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen  bg-gray-100 " >
       {/* Header */}
-      <header className="bg-white p-4 border-b flex items-center sticky top-0 z-10">
-        <button 
-          onClick={() => history.push("/Messages")}
-          className="mr-4 focus:outline-none"
-        >
-          <ArrowCircleLeftIcon className="h-8 w-8 text-blue-500" />
-        </button>
-        <div>
-          <h1 className="font-semibold text-lg">Conversation</h1>
-          <p className="text-sm text-gray-600">
-            Chatting with User {userId}
-          </p>
-        </div>
-      </header>
+      {/* <header className="bg-white p-3 border-b flex items-center fixed top-16 left-0 right-0 z-40 h-16  md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto">      <button  */}
+  <header className="bg-white p-3 border-b border-gray-200 shadow-sm flex  top-16 left-0 right-0 z-40 h-16 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto">
+    <button 
+      onClick={() => history.push("/Messages")}
+      className="mr-4 focus:outline-none hover:bg-gray-100 p-1 rounded-full transition-colors"
+    >
+      <ArrowCircleLeftIcon className="h-8 w-8 text-blue-500 hover:text-blue-600" />
+    </button>
+
+    <div className="flex-1 min-w-0">
+      <h1 className="font-semibold text-lg truncate">Conversation</h1>
+      <p className="text-sm text-gray-600 truncate">
+        Chatting with {sendername}
+      </p>
+    </div>
+    <button 
+      onClick={() => history.push(`/auction-details/${itemId}`)}
+      className="ml-4 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors whitespace-nowrap"
+    >
+      {contenttitle}
+    </button>
+  </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto p-4">
+      <main 
+        ref={messagesContainerRef}
+        className="flex-1  bg-white overflow-y-auto pt-32 pb-20 px-4  md:w-1/2 lg:w-1/2 md:mx-auto  lg:mx-auto"      >
         {messages.length > 0 ? (
-          messages.map((message) => (
-            <div
-              key={`msg-${message.id}-${message.timestamp}`}
-              className={`flex mb-4 ${message.senderId === currentUser?.id ? 'justify-end' : 'justify-start'}`}
-            >
+          messages.map((message, index) => {
+            const isLast = index === messages.length - 1;
+            return (
               <div
-                className={`max-w-[75%] p-3 rounded-lg ${
-                  message.senderId === currentUser?.id
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white border border-gray-200'
-                }`}
+                key={`msg-${message.id}-${message.timestamp}`}
+                ref={isLast ? lastMessageRef : null}
+                className={`flex mb-4 ${message.senderId === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
-                <p className="break-words">{message.messageContent}</p>
-                <p className="text-xs mt-1 opacity-70">
-                  {format(new Date(message.timestamp), 'h:mm a')}
-                </p>
+                <div
+                  className={`max-w-[75%] xl:w-1/2 lg:w-1/3 p-3 rounded-lg ${
+                    message.senderId === currentUser?.id
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-green-200 border border-gray-200'
+                  }`}
+                >
+                  <p className="break-words">{message.messageContent}</p>
+                  <p className="text-xs mt-1 opacity-70 text-right">
+                    {format(new Date(message.timestamp), 'h:mm a')}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="text-center text-gray-500 mt-8">
             No messages yet. Start the conversation!
           </div>
         )}
-        {/* <div ref={messagesEndRef} /> */}
       </main>
 
       {/* Input */}
-      <form onSubmit={handleSendMessage} className="bg-white p-4 border-t sticky bottom-0">
+      <form onSubmit={handleSendMessage} className="bg-white p-4 border-t sticky bottom-0  md:w-1/3 lg:w-1/2 lg:mx-auto ">
         <div className="flex gap-2">
           <input
             id="inputMsg"
@@ -211,13 +239,13 @@ export const Conversation = () => {
             placeholder="Type your message..."
             className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50"
-            disabled={!textMsg.trim()}
-          >
-            Send
-          </button>
+        <button
+  type="submit"
+  className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50 transition-colors shadow-md hover:shadow-lg disabled:shadow-none gap-2"
+  disabled={!textMsg.trim()}
+>
+  <span>Send</span>
+</button>
         </div>
       </form>
     </div>

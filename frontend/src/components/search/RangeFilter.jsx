@@ -1,46 +1,12 @@
-// import {useState } from "react";
-// import RangeSlider from "./Slider";
-
-// export const RangeFilter = ({ handleFilters }) => {
-//   const[range,setRange] =useState({
-//     min: 0,
-//     max:2000
-//   })
-
-//   return (
-//       <div className="flex justify-between content-between items-center">
-//       <div className="bg-white w-14 text-center mt-4 mr-2 rounded-lg">
-//           {range.min}
-//         </div>
-//         <RangeSlider  range={setRange} handleFilters={handleFilters} />
-//       <div className="bg-white w-14 text-center mt-4 ml-2 rounded-lg">
-//           {range.max==2000? `${range.max}+` : range.max}
-//         </div>
-//       </div>
-//   );
-// };
 import { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Slider,
-  TextField,
-  InputAdornment,
-  Typography,
-  Paper,
-  useTheme,
-  useMediaQuery
-} from "@mui/material";
 import debounce from "lodash/debounce";
 
 export const RangeFilter = ({ handleFilters }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const MAX_VALUE = 10000000; // ₹1 Crore
+  const MAX_VALUE = 10000000;
   const MIN_VALUE = 0;
 
-  const [range, setRange] = useState({ min: 0, max: MAX_VALUE });
-  const [sliderValue, setSliderValue] = useState([0, MAX_VALUE]);
+  const [range, setRange] = useState({ min: MIN_VALUE, max: MAX_VALUE });
+  const [sliderValue, setSliderValue] = useState([MIN_VALUE, MAX_VALUE]);
 
   const updateFilters = useCallback(
     debounce((min, max) => {
@@ -51,80 +17,101 @@ export const RangeFilter = ({ handleFilters }) => {
         priceTo: max !== "" ? Number(max) : null,
       }));
     }, 500),
-    []
+    [handleFilters]
   );
 
   useEffect(() => {
     updateFilters(range.min, range.max);
-  }, [range]);
+    return () => updateFilters.cancel();
+  }, [range, updateFilters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const numericValue = value.replace(/\D/g, "");
+    const numValue = numericValue === "" ? MIN_VALUE : Math.min(Number(numericValue), MAX_VALUE);
+
     setRange((prev) => ({
       ...prev,
-      [name]: numericValue === "" ? "" : Number(numericValue),
+      [name]: numValue,
     }));
+
     if (name === "min") {
-      setSliderValue([Number(numericValue), range.max]);
+      setSliderValue([numValue, Math.max(numValue, sliderValue[1])]);
     } else {
-      setSliderValue([range.min, Number(numericValue)]);
+      setSliderValue([Math.min(numValue, sliderValue[0]), numValue]);
     }
   };
 
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
-    setRange({ min: newValue[0], max: newValue[1] });
+  const handleSliderChange = (e) => {
+    const newMin = Number(e.target.value);
+    const newMax = sliderValue[1];
+    setSliderValue([newMin, newMax]);
+    setRange({ min: newMin, max: newMax });
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    })
+      .format(value)
+      .replace(/^(\D+)/, "$1 ");
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3, borderRadius: 3, backgroundColor: "#FAF9F6" }}>
-      <Typography variant="h6" gutterBottom>
-        Price Range (INR)
-      </Typography>
+    <div className="bg-white shadow-lg rounded-xl p-6 transition-all hover:shadow-xl w-full max-w-2xl mx-auto">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Price Range</h2>
 
-      <Box
-        display="flex"
-        flexDirection={isMobile ? "column" : "row"}
-        alignItems="center"
-        gap={2}
-        mb={2}
-      >
-        <TextField
-          label="Min Price"
-          name="min"
-          value={range.min}
-          onChange={handleInputChange}
-          fullWidth
-          InputProps={{
-            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-          }}
-        />
-        <TextField
-          label="Max Price"
-          name="max"
-          value={range.max}
-          onChange={handleInputChange}
-          fullWidth
-          InputProps={{
-            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-          }}
-        />
-      </Box>
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Min Price</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+            <input
+              type="text"
+              name="min"
+              value={range.min === MIN_VALUE ? "" : range.min}
+              onChange={handleInputChange}
+              className="w-full pl-8 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Min"
+            />
+          </div>
+        </div>
 
-      <Box px={isMobile ? 1 : 3}>
-        <Slider
-          value={sliderValue}
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Max Price</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+            <input
+              type="text"
+              name="max"
+              value={range.max === MAX_VALUE ? "" : range.max}
+              onChange={handleInputChange}
+              className="w-full pl-8 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Max"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Custom Slider */}
+      <div className="mt-4">
+        <input
+          type="range"
           min={MIN_VALUE}
           max={MAX_VALUE}
-          step={10000}
-          onChange={handleSliderChange}
-          valueLabelDisplay="auto"
-          sx={{
-            color: "#7B2CBF",
-          }}
+          step={100000}
+          value={sliderValue[0]}
+          onChange={(e) => handleSliderChange(e)}
+          className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
         />
-      </Box>
-    </Paper>
+      </div>
+
+      <div className="flex justify-between text-sm text-gray-500 mt-2">
+        <span>{formatCurrency(MIN_VALUE)}</span>
+        <span>{formatCurrency(MAX_VALUE)}</span>
+      </div>
+    </div>
   );
 };

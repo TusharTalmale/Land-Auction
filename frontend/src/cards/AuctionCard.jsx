@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import CountdownTimer from "../components/CountdownTimer";
+import { TimeProgressBar } from "../components/TimeProgressBar";
 
 export const AuctionCard = ({ auction, sx }) => { // Added sx prop here
   const history = useHistory();
@@ -7,58 +7,51 @@ export const AuctionCard = ({ auction, sx }) => { // Added sx prop here
   const goToAuctionDetails = () => {
     history.push(`/auction-details/${auction.id}`);
   };
-
   return (
-    // Main container: flex-col on mobile, flex-row on sm and up. Removed fixed height (h-30). Added sx for external styles.
     <div
       onClick={goToAuctionDetails}
-      className="flex flex-col sm:flex-row bg-white p-3"
+      className="cursor-pointer mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+    >
     
-      sx={sx} >
-      {/* Image Container: full width on mobile, fixed width on sm and up. flex-shrink-0 prevents it from shrinking. Added spacing below image on mobile and to the right on sm+. */}
-      <div className="w-full sm:w-32 flex-shrink-0 mb-2 sm:mb-0 sm:mr-4">
-        {/* Image: full width and auto height on mobile, fixed w/h on sm+. object-cover to maintain aspect ratio */}
-        {false ? ( 
-          <img
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-            alt="Placeholder"
-            className="w-full h-32 object-cover rounded-md sm:w-32 sm:h-32" // Added rounded corners
-          />
-        ) : (
-          <img
-            className="w-full object-cover  sm:w-32 sm:h-32" // Added rounded corners
-            src={`uploads/${auction.imagePath}_img1.jpg`}
-            alt=""
-          />
-        )}
+<div className="mx-auto flex max-w-sm items-center gap-x- rounded-xl bg-white  shadow-lg outline outline-black/5 ">
+        <img
+          src={
+            false
+              ? "https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+              : `uploads/${auction.imagePath}_img1.jpg`
+          }
+          alt={auction.title}
+          className="w-full h-full rounded-xl object-cover"
+        />
       </div>
 
-      {/* Text Content Container: Takes remaining width. flex-col to stack internal content. Removed fixed height (h-32). Added padding. */}
-      <div className="flex flex-col ml-10 w-full p-1">
-
-        {/* Title: Uses available space. Removed fixed height (h-1/2) and col-span. Added margin bottom. */}
-        <div className="font-myHtext font-bold leading-tight mb-2 flex-grow"> {/* Added flex-grow to take available vertical space */}
-          {auction.title}
-        </div>
-
-        {/* Price Row: flex row, justify between items. items-center for vertical alignment. Removed empty w-1/2 div. */}
-        <div className="w-full flex justify-between items-center mb-1">
-          <div className="font-myPtext text-black text-base font-bold">
+      {/* Content Section */}
+      <div className="flex flex-col justify-between flex-grow w-full gap-3">
+        {/* Title */}
+        <div className="flex justify-between items-center">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
+         Title :  {auction.title}
+        </h2>
+        <span className="text-sm text-gray-500 dark:text-gray-400"> {auction.city} , {auction.state}</span>
+</div>
+        {/* Price + Bid Count */}
+        <div className="flex justify-between items-center">
+          <span className="text-green-600 dark:text-green-400 font-bold text-base sm:text-lg">
             {auction.highestBid === "0"
-              ? `${auction.startPrice} Rs`
-              : `${auction.highestBid} Rs`}
-          </div>
+              ? ` ₹ ${auction.startPrice} `
+              : `₹ ${auction.highestBid} `}
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {auction.numberOfBids} bid{auction.numberOfBids !== 1 && "s"}
+          </span>
         </div>
 
-        {/* Bids and Timer Row: flex row, justify between items. items-center for vertical alignment. */}
-        <div className="w-full flex justify-between items-center text-sm"> {/* Moved text-sm up */}
-          <div className="font-myPtext text-black"> {/* Removed w-1/3 */}
-            {auction.numberOfBids} bids
-          </div>
-          <div className="font-myPtext mr-20 font-bold text-right text-danger "> {/* Removed w-2/3 */}
-            {<CountdownTimer auctionEndTime={auction.endTime} />}
-          </div>
-        </div>
+       
+         {/* Time progress bar */}
+         <TimeProgressBar
+                startTime={auction.startTime} 
+                endTime={auction.endTime} 
+              />
       </div>
     </div>
   );

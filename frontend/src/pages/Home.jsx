@@ -13,44 +13,58 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 
-// Styled component for the Hero section using background-image
+import createBack from "../images/createback.jpg";
+
+// Styled components
 const HeroSection = styled('div')(({ theme }) => ({
   position: 'relative',
-  height: '50vh', // Generous height for the hero
+  height: '70vh',
   width: '100%',
   overflow: 'hidden',
   display: 'flex',
-  flexDirection: 'column', // Stack content vertically
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
-  // Use background-image CSS property
-  backgroundImage: `url(${homeTop})`, // Use the imported image as background
-  backgroundSize: 'cover', // Cover the entire area
-  backgroundPosition: 'center', // Center the background image
-  backgroundRepeat: 'no-repeat', // Do not repeat the image
-  color: 'white', // Default text color for the hero content
-  // Add an overlay using a pseudo-element or directly on the container
-  '&:before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    // Darker, slightly earthy overlay for a land theme
-    background: 'rgba(50, 40, 30, 0.6)', // Dark brown/grey with transparency
-    zIndex: 0, // Ensure overlay is between background and text
-  },
+  backgroundImage: `
+    url(${homeTop})
+  `,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+  backgroundRepeat: 'no-repeat',
+ 
 }));
 
-// Styled box for the main hero text content
-const HeroContent = styled(Box)({
-  position: 'relative',
-  zIndex: 1, // Ensure text is on top of the overlay
-  padding: '0 16px', // Add some horizontal padding
-});
 
+const HeroContent = styled('div')({
+  position: 'relative',
+  zIndex: 1,
+  padding: '0 1.5rem',
+  animation: 'fadeInUp 1s ease-out',
+  '& h1': {
+    textShadow: '2px 4px 8px rgba(0,0,0,0.3)',
+    letterSpacing: '-0.05em',
+    lineHeight: 1.1,
+    marginBottom: '1.5rem',
+  
+  },
+  '& p': {
+    textShadow: '1px 2px 4px rgba(0,0,0,0.2)',
+    backdropFilter: 'blur(2px)',
+    padding: '0.5rem 1rem',
+    borderRadius: '12px',
+    display: 'inline-block'
+  },
+  '@keyframes fadeInUp': {
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(20px)'
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0)'
+    }
+  }
+});
 
 export const Home = () => {
   const [page, setPage] = useState(0);
@@ -96,98 +110,129 @@ export const Home = () => {
 
   return (
     <Box className="min-h-screen bg-gray-100">
-      {/* Hero Section - Land Auction Theme */}
-      {/* Using the styled HeroSection component with background-image */}
-      <HeroSection>
-        {/* No need for an <img> tag here, the image is set via CSS background */}
-        {/* Using the styled HeroContent box */}
-        <HeroContent>
-          {/* Updated text for Land Auction theme */}
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-md mb-4">
-            Find Your Perfect Piece of Land
-          </h1>
-          {/* Updated text for Land Auction theme */}
-          <p className="text-lg md:text-xl text-gray-200 opacity-95 max-w-3xl mx-auto">
-            Browse and bid on land properties for sale.
-          </p>
-        </HeroContent>
-      </HeroSection>
+    
+    <HeroSection>
+  <HeroContent>
+    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 transform transition-all duration-500 hover:scale-105">
+      Discover Your Dream Land
+    </h1>
+    <p className="text-xl md:text-2xl text-gray-100 opacity-95 max-w-2xl mx-auto mb-8 font-medium">
+      Explore & Invest in Premium Earth Properties
+    </p>
+    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+      Start Exploring
+    </button>
+  </HeroContent>
+</HeroSection>
 
-      {/* Main Content */}
-      <Container maxWidth="xl" className="py-8 px-4 lg:px-8">
-        {/* Search and Filters - Layout Improved */}
-        <Box
-          className={`relative -mt-20 -mb-10 z-10 bg-white shadow-xl rounded-lg p-6 ${isMobile ? 'mx-auto w-11/12' : 'mx-auto max-w-4xl'}`} // Centered, wider on larger screens, higher shadow
-        >
-          {/* Using flexbox or a more refined grid for layout */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: isMedium ? 'column' : 'row', // Stack on medium/small, side-by-side on large
-              gap: isMedium ? theme.spacing(3) : theme.spacing(4), // Add space between items
-              alignItems: isMedium ? 'stretch' : 'flex-start', // Stretch items in column, align to start in row
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}> {/* Search takes available space */}
-              <Search handleFilters={setFilterParams} />
-            </Box>
+     {/* Main Content */}
+<Container maxWidth="xl" className="py-8 px-4 lg:px-8"   style={{
+  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${createBack})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center center',
+  backgroundAttachment: 'fixed',
+  backgroundRepeat: 'no-repeat'
+}}
+>
+  {/* Floating Filter Section */}
+  <Box className={`relative -mt-24 -mb-12 z-10 bg-gradient-to-br from-white to-blue-50 shadow-2xl rounded-2xl p-6 ${isMobile ? 'mx-auto w-11/12' : 'mx-auto max-w-5xl'}`}
+    sx={{
+      border: '1px solid rgba(255,255,255,0.3)',
+      backdropFilter: 'blur(12px)',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.12)',
+      transition: 'transform 0.3s ease',
+      '&:hover': {
+        transform: 'translateY(-2px)'
+      }
+    }}
+  >
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: isMedium ? 'column' : 'row',
+        gap: isMedium ? theme.spacing(3) : theme.spacing(4),
+        alignItems: 'stretch',
+      }}
+    >
+      {/* Search Area */}
+      <Box sx={{ 
+        flexGrow: 1,
+        position: 'relative',
+        '&:after': {
+          content: '""',
+          position: 'absolute',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '2px',
+          height: '60%',
+          bgcolor: isMedium ? 'transparent' : 'divider',
+          borderRadius: '2px'
+        }
+      }}>
+        <Search handleFilters={setFilterParams} />
+      </Box>
 
-            <Box sx={{ width: isMedium ? '100%' : 'auto' }}> {/* Categories adjusts width */}
-              {/* Assuming Categories component is relevant to land types (Residential, Commercial, etc.) */}
-              <Categories handleFilters={setFilterParams} />
-            </Box>
-          </Box>
-        </Box>
+      {/* Categories */}
+      <Box sx={{ 
+        width: isMedium ? '100%' : 'auto',
+        pl: isMedium ? 0 : 4,
+        position: 'relative'
+      }}>
+        <Categories handleFilters={setFilterParams} />
+      </Box>
+    </Box>
+  </Box>
 
-     
- 
-                {/* Auction List */}    
+  {/* Auction List */}
+  <Box className="mb-2" sx={{
+    mt: 8,
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      top: -20,
+      left: '50%',
+      transform: 'translateX(-50%)',
+   
+      background: 'linear-gradient(to right, transparent 0%, #e0e7ff 50%, transparent 100%)'
+    }
+    
+  }}
 
-        <Box className="mb-8 ">
+  >
+    <HomeAuctionList filteredAuctionItems={filteredAuctionItems} />
+  </Box>
 
-          <HomeAuctionList filteredAuctionItems={filteredAuctionItems} />
-
-        </Box>
-
-
-
-        {/* Load More Button */}
-
-        <Box className="text-center mt-8">
-
-          <Button
-
-            variant="contained"
-
-            color="primary"
-
-            size="large"
-
-            onClick={() => setPage(page + 1)}
-
-            className="py-3 px-12 rounded-full shadow-lg hover:shadow-xl transition-all"
-
-            sx={{
-
-              background: 'linear-gradient(45deg, #6B46C1 30%, #805AD5 90%)',
-
-              '&:hover': {
-
-                transform: 'translateY(-2px)'
-
-              }
-
-            }}
-
-          >
-
-            Load More
-
-          </Button>
-
-        </Box>
-
-      </Container>
+  {/* Load More Button */}
+  <Box className="text-center mt-12" sx={{
+    position: 'relative',
+    zIndex: 1
+  }}>
+    <Button
+      variant="contained"
+      size="large"
+      onClick={() => setPage(page + 1)}
+      className="py-4 px-16 rounded-[2rem] shadow-xl hover:shadow-2xl transition-all"
+      sx={{
+        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        fontSize: '1.125rem',
+        fontWeight: 700,
+        letterSpacing: '0.025em',
+        '&:hover': {
+          transform: 'scale(1.05) rotate(-1deg)',
+          background: 'linear-gradient(135deg, #818cf8 0%, #a78bfa 100%)',
+          boxShadow: '0 10px 20px rgba(99,102,241,0.3)'
+        },
+        '&:active': {
+          transform: 'scale(0.98)'
+        }
+      }}
+    >
+      Show More Properties
+    </Button>
+  </Box>
+</Container>
     </Box>
   );
 };

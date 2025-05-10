@@ -1,7 +1,7 @@
 package com.group4.auctionsite.repositories;
 
-import com.group4.auctionsite.entities.AuctionItem;
 import com.group4.auctionsite.entities.Bid;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,5 +20,4 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     @Query(value = "SELECT bid FROM bid WHERE user_id = ?1 AND item_id = ?2 AND bid > 0 ORDER BY bid DESC LIMIT 1", nativeQuery = true)
     int findMaxBidByUserId(long userId, long itemId);
-
 }

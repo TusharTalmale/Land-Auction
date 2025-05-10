@@ -1,6 +1,6 @@
 package com.group4.auctionsite.controllers;
 
-import com.group4.auctionsite.entities.AuctionItem;
+import com.group4.auctionsite.entities.Bid;
 import com.group4.auctionsite.entities.User;
 import com.group4.auctionsite.services.AuctionItemService;
 import com.group4.auctionsite.services.BidService;
@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 @RestController
 @RequestMapping("/api/bid")

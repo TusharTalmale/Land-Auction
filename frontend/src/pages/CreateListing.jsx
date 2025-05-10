@@ -5,7 +5,7 @@ import Datepicker from "../components/Datepicker";
 let formData = new FormData();
 import util from "../styles/util";
 import { TermsAndConditions } from "../components/TermsAndCondition";
-
+import MapPicker from "../components/MapPicker";
 export const CreateListing = () => {
   const history = useHistory();
   const { currentUser } = useContext(UserContext);
@@ -15,6 +15,7 @@ export const CreateListing = () => {
   const [preview3, setPreview3] = useState('src/images/upload.png');
   const [noFiles, setNoFiles] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState('false'); 
+  const [coords, setCoords] = useState(null);
 
   const [plotData, setPlotData] = useState({
     title: "",
@@ -29,12 +30,18 @@ export const CreateListing = () => {
     ownershipType: "Sole Owner",
     startPrice: 0,
     endTime: new Date().getTime() + 86399000,
-    latitude: null,
-    longitude: null,
+    latitude: 19.7515,  // Initialize with default maharastra values
+    longitude: 75.7139,
     sectorNumber: "", 
     plotNumber: "",
   });
-
+  const handleLocationSelect = ({ latitude, longitude }) => {
+    setPlotData((prev) => ({
+      ...prev,
+      latitude,
+      longitude,
+    }));
+  };
   const facingOptions = ["North", "East", "West", "South"];
   const ownershipTypes = [
     "Sole Owner", 
@@ -42,6 +49,7 @@ export const CreateListing = () => {
     "Inherited", 
     "Leasehold"
   ];
+ 
   const handleTermsChange = (e) => {
   // setTermsAccepted(e.target.checked);
   setTermsAccepted('true')  // Change to boolean for simplicity
@@ -56,7 +64,6 @@ export const CreateListing = () => {
       return;
     }
 
- 
 
     const newPlotObj = {
       ...plotData,
@@ -173,308 +180,7 @@ export const CreateListing = () => {
       }
   }
 
-//   return (
-//     <div>
-//       <div className="font-myHtext text-2xl text-center py-6 bg-myAw">
-//         Create Land Listing
-//       </div>
-      
-//       <div className="p-6">
-//       <label className="w-full p-4 flex justify-center font-myPtext font-bold font-block text-base">Upload photos*</label>
-//         <div className="w-full px-4 flex flex-wrap justify-center mt-4">
-//           <form className="w-96 flex flex-wrap justify-center">
-//             <div className="w-80 h-48 px-5 grid grid-rows-2 grid-cols-3 gap-x-4 gap-y-4 ">
-//               <div className="image-upload h-48 w-48 row-span-2 col-span-2">
-//                 <label htmlFor="image1">
-//                   <img className="object-contain h-48 w-48" src={preview1} alt="" />
-//                 </label>
-//                 <input id="image1" accept="image/*" type="file" onChange={e => onAddImage(e, 1)} />
-//               </div>
-
-//               <div className=" h-20 w-24 image-upload flex flex-wrap justify-center ">
-//                 <label htmlFor="image2">
-//                   <img className="object-contain h-20 " src={preview2} alt="" />
-//                 </label>
-//                 <input accept="image/*" type="file" id="image2" onChange={e => onAddImage(e, 2)} />
-//               </div>
-
-//               <div className=" h-20 w-24 image-upload flex flex-wrap -mt-4 justify-center">
-//                 <label htmlFor="image3">
-//                   <img className="object-contain h-20 " src={preview3} alt="" />
-//                 </label>
-//                 <input accept="image/*" type="file" id="image3" onChange={e => onAddImage(e, 3)} />
-//               </div>
-//             </div >
-//             {noFiles && <div className="w-full text-center text-sm text-red-600">You must add at least one image</div>}
-//           </form>
-//           </div>
-//       </div>
-
-//       <form className="p-6" onSubmit={imageUploadSubmit}>
-//         {/* 🧾 Basic Plot Information */}
-//         <div className="mb-8">
-//           <h3 className="text-xl font-bold mb-4">Basic Plot Information</h3>
-          
-//           <div className="mb-4">
-//             <label className="font-myPtext font-bold block text-base">
-//               Plot Title*
-//             </label>
-//             <input
-//               type="text"
-//               className={util.input}
-//               value={plotData.title}
-//               onChange={(e) => setPlotData({...plotData, title: e.target.value})}
-//               required
-//             />
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-4 mb-4">
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 Plot Size (sq ft)*
-//               </label>
-//               <input
-//                 type="number"
-//                 className={util.input}
-//                 value={plotData.plotSize}
-//                 onChange={(e) => setPlotData({...plotData, plotSize: e.target.value})}
-//                 required
-//               />
-//             </div>
-            
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 Plot Facing
-//               </label>
-//               <select
-//                 className={util.input}
-//                 value={plotData.plotFacing}
-//                 onChange={(e) => setPlotData({...plotData, plotFacing: e.target.value})}
-//               >
-//                 {facingOptions.map(option => (
-//                   <option key={option} value={option}>{option}</option>
-//                 ))}
-//               </select>
-//             </div>
-//           </div>
-
-//           <div className="mb-4">
-//             <label className="font-myPtext font-bold block text-base">
-//               Tagline
-//             </label>
-//             <input
-//               type="text"
-//               className={util.input}
-//               value={plotData.tagline}
-//               onChange={(e) => setPlotData({...plotData, tagline: e.target.value})}
-//               placeholder="Short promotional sentence"
-//             />
-//           </div>
-//         </div>
-
-//         {/* 📍 Location Information */}
-//         <div className="mb-8">
-//           <h3 className="text-xl font-bold mb-4">Location Details</h3>
-
-// <div className="grid grid-cols-2 gap-4 mb-4">
-//   <div>
-//     <label className="font-myPtext font-bold block text-base">
-// Block no/Sector no  </label>
-//     <input
-//       type="text"
-//       className={util.input}
-//       value={plotData.sectorNumber}
-//       onChange={(e) => setPlotData({...plotData, sectorNumber: e.target.value})}
-//       required
-//     />
-//   </div>
   
-//   <div>
-//     <label className="font-myPtext font-bold block text-base">
-// PLOT NO     </label>
-//     <input
-//       type="text"
-//       className={util.input}
-//       value={plotData.plotNumber}
-//       onChange={(e) => setPlotData({...plotData, plotNumber: e.target.value})}
-//       required
-//     />
-//   </div>
-// </div>
-          
-//           <div className="mb-4">
-//             <label className="font-myPtext font-bold block text-base">
-//               Full Address*
-//             </label>
-//             <textarea
-//               className={`h-20 ${util.input}`}
-//               value={plotData.address}
-//               onChange={(e) => setPlotData({...plotData, address: e.target.value})}
-//               required
-//             />
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-4 mb-4">
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 City*
-//               </label>
-//               <input
-//                 type="text"
-//                 className={util.input}
-//                 value={plotData.city}
-//                 onChange={(e) => setPlotData({...plotData, city: e.target.value})}
-//                 required
-//               />
-//             </div>
-            
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 State*
-//               </label>
-//               <input
-//                 type="text"
-//                 className={util.input}
-//                 value={plotData.state}
-//                 onChange={(e) => setPlotData({...plotData, state: e.target.value})}
-//                 required
-//               />
-//             </div>
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-4 mb-4">
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 PIN Code*
-//               </label>
-//               <input
-//                 type="text"
-//                 className={util.input}
-//                 value={plotData.pinCode}
-//                 onChange={(e) => setPlotData({...plotData, pinCode: e.target.value})}
-//                 required
-//               />
-//             </div>
-            
-//             <div>
-//               <label className="font-myPtext font-bold block text-base">
-//                 Nearby Landmarks
-//               </label>
-//               <input
-//                 type="text"
-//                 className={util.input}
-//                 value={plotData.landmarks}
-//                 onChange={(e) => setPlotData({...plotData, landmarks: e.target.value})}
-//                 placeholder="e.g., 1km from Railway Station"
-//               />
-//             </div>
-//           </div>
-//         </div>
-// <div className="mb-8">
-//   <h3 className="text-xl font-bold mb-4">Select Exact Location</h3>
-//   <div className="h-96 w-full bg-gray-100 rounded-lg">
-//     {/* <MapComponent 
-//       onLocationSelect={(lat, lng) => {
-//         setPlotData(prev => ({
-//           ...prev,
-//           latitude: lat,
-//           longitude: lng
-//         }))
-//       }}
-//     /> */}
-//     <input type="number" placeholder="Latitude" onChange={(e) => setPlotData({...plotData, latitude: parseFloat(e.target.value)})} />
-// <input type="number" placeholder="longitude" onChange={(e) => setPlotData({...plotData, longitude: parseFloat(e.target.value)})} />
-
-//   </div>
-// </div>
-//         {/* ⚖️ Legal Information */}
-//         <div className="mb-8">
-//           <h3 className="text-xl font-bold mb-4">Legal & Ownership</h3>
-          
-//           <div className="mb-4">
-//             <label className="font-myPtext font-bold block text-base">
-//               Ownership Type*
-//             </label>
-//             <select
-//               className={util.input}
-//               value={plotData.ownershipType}
-//               onChange={(e) => setPlotData({...plotData, ownershipType: e.target.value})}
-//             >
-//               {ownershipTypes.map(type => (
-//                 <option key={type} value={type}>{type}</option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div className="mb-4">
-//             <label className="font-myPtext font-bold block text-base">
-//               Starting Price (₹)*
-//             </label>
-//             <input
-//               type="number"
-//               className={util.input}
-//               value={plotData.startPrice}
-//               onChange={(e) => setPlotData({...plotData, startPrice: e.target.value})}
-//               required
-//             />
-//           </div>
-//         </div>
-
-//         {/* 📅 Auction End Date */}
-//         <div className="mb-8">
-//           <h3 className="text-xl font-bold mb-4">Auction Details</h3>
-//           <div className="mb-4">
-//             <label className="block font-myPtext font-bold text-base">
-//               Auction End Date*
-//             </label>
-//             <Datepicker callback={(date) => setPlotData({...plotData, endTime: date})} />
-//           </div>
-//         </div>
-
-//         {/* ✅ Terms & Conditions */}
-//         <div className="mb-8">
-//           <div className="flex items-center mb-4">
-         
-//           <input
-//   type="checkbox"
-//   id="terms"
-//   checked={termsAccepted}
-//   onChange={handleTermsChange}
-// />
-// <label htmlFor="terms">I accept the terms and conditions</label>
-//           </div>
-//         </div>
-
-//         {/* Submit Button */}
-//         <div className="flex justify-center pt-2 pb-4">
-//         <button
-//     type="submit"
-//     disabled={termsAccepted !== 'true'}
-//     className={`group relative w-1/2 flex justify-center py-2 px-4 border text-base font-medium rounded-md ${
-//       termsAccepted === 'true' 
-//         ? 'bg-green-600 text-white hover:bg-green-700' 
-//         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-//     }`}
-//   >
-//     Submit Listing
-//   </button>
-//         </div>
-        
-//         {loginAlert && (
-//           <div className="text-center text-myRe text-xs p-1">
-//             Please login to create a listing
-//           </div>
-//         )}
-//       </form>
-//     </div>
-//   );
-// };
-
-
-// helper function to convert canvas image to file
-// should be in a utility file
-
-
 
 return (
   <div className="min-h-screen bg-gray-50"  style={{
@@ -713,28 +419,20 @@ return (
         </div>
 
         {/* Map Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold mb-6 text-gray-800 border-b pb-2">
-            Select Exact Location
-          </h3>
-          <div className="h-96 w-full bg-gray-100 rounded-lg flex items-center justify-center">
-            {/* Map component would go here */}
-            <div className="space-y-4 w-full max-w-md p-4">
-              <input 
-                type="number" 
-                placeholder="Latitude" 
-                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                onChange={(e) => setPlotData({...plotData, latitude: parseFloat(e.target.value)})} 
-              />
-              <input 
-                type="number" 
-                placeholder="Longitude" 
-                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                onChange={(e) => setPlotData({...plotData, longitude: parseFloat(e.target.value)})} 
-              />
-            </div>
-          </div>
-        </div>
+       
+        <div className="bg-gray-800 text-white ">
+      <h2 className="p-4 ">Pick a Location on Map</h2>
+      <MapPicker onLocationSelect={handleLocationSelect} />
+
+<p className="bg-gray-800 text-white p-4 "> 
+  Selected Coordinates :
+  <br />
+  Latitude = {plotData.latitude.toFixed(5)}
+  <br />
+  Longitude = {plotData.longitude.toFixed(5)}
+</p>
+     
+    </div>
 
         {/* Legal Information */}
         <div className="bg-white rounded-lg shadow-md p-6">

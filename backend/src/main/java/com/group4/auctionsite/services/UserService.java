@@ -85,4 +85,21 @@ public class UserService {
 
         return findCurrentUser();
     }
+
+    public User updateCurrentUserProfile(User updatedUserData) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentUsername); // Assuming email is the principal name
+
+        if (currentUser == null) {
+            // This should ideally not happen if a user is authenticated,
+            // but handling the case is good practice.
+            throw new RuntimeException("Authenticated user not found in database.");
+        }
+
+        // Use the helper method to copy only the allowed profile fields
+        currentUser.updateProfileFields(updatedUserData);
+
+        // Save the updated user entity
+        return userRepository.save(currentUser);
+    }
 }

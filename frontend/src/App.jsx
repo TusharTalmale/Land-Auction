@@ -26,7 +26,8 @@ import { API } from "./pages/API";
 import About from "./pages/About";
 import Footer from "./components/Footer";
 // import { LandAuctionDetails } from "./pages/LandAuctionDetails";
-// import { UserProfilePage } from "./pages/Userpage";
+import { UserProfilePage } from "./pages/Userpage";
+import ErrorBoundary from "./contexts/ErrorBoundary";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <div className="mt-14">
+      <ErrorBoundary>
       <APIContextProvider>
         <UserProvider>
           <NotificationContextProvider>
@@ -56,7 +58,7 @@ function App() {
                         <Route exact path="/Create" component={CreateListing} />
                         <Route exact path="/About" component={About} />
                         <Route exact path="/API" component={API} />
-                        {/* <Route exact path="/me" component={UserProfilePage} /> */}
+                        <Route exact path="/me" component={UserProfilePage} />
                         <Route path="*" component={NotFound404} />
                       </Switch>
                       <Footer/>
@@ -69,6 +71,7 @@ function App() {
 
         </UserProvider>
       </APIContextProvider>
+      </ErrorBoundary>
     </div>
   );
 }

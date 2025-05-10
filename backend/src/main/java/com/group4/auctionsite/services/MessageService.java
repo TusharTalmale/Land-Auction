@@ -3,6 +3,7 @@ package com.group4.auctionsite.services;
 import com.group4.auctionsite.controllers.UserController;
 import com.group4.auctionsite.entities.AuctionItem;
 import com.group4.auctionsite.entities.Message;
+import com.group4.auctionsite.entities.User;
 import com.group4.auctionsite.repositories.AuctionItemRepository;
 import com.group4.auctionsite.repositories.MessageRepository;
 import com.group4.auctionsite.repositories.UserRepository;
@@ -11,10 +12,7 @@ import com.group4.auctionsite.utils.FrontEndHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MessageService {
@@ -69,19 +67,23 @@ public class MessageService {
 
         return frontEndHelper.ToJson(messages);
     }
+    // In your service method
+    public Map<String, Object> getMessagesByItemIdAndUserId(long itemId, long userId, long currentUserId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("messages", Collections.emptyList());
+        response.put("title", "");
+        response.put("username", "");
 
-    public HashMap getMessagesByItemIdAndUserId(long itemId, long userId, long currentUserId) {
+        // Add null checks for repositories
+        AuctionItem item = auctionItemRepository.findById(itemId).orElse(null);
+        User otherUser = userRepository.findById(userId).orElse(null);
+
+        if (item != null) response.put("title", item.getTitle());
+        if (otherUser != null) response.put("username", otherUser.getUsername());
 
         List<Message> messages = messageRepository.findMessageByItemIdAndUserIdAndCurrentUserId(itemId, userId, currentUserId);
+        response.put("messages", messages);
 
-        String title = auctionItemRepository.findById(itemId).get().getTitle();
-        String username = userRepository.findById(userId).get().getUsername();
-
-        HashMap map = new HashMap();
-        map.put( "title",title);
-        map.put("messages",messages);
-        map.put("username",username);
-
-        return map;
+        return response;
     }
 }

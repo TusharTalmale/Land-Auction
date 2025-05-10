@@ -6,6 +6,7 @@ import com.group4.auctionsite.services.MessageService;
 import com.group4.auctionsite.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.security.core.AuctionItemDetails.AuctionItemDetailsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -35,13 +36,29 @@ public class MessageController {
 
 
     @GetMapping("/{itemId}/{userId}")
-    public HashMap getMessagesByItemIdAndUserId(@PathVariable long itemId, @PathVariable long userId) {
+    public ResponseEntity<Map<String, Object>> getMessagesByItemIdAndUserId(
+            @PathVariable long itemId,
+            @PathVariable long userId) {
 
-        User user = userService.findCurrentUser();
-        if(user==null || user.getId()==userId ) {return null; }
+        Map<String, Object> defaultResponse = new HashMap<>();
+        defaultResponse.put("messages", Collections.emptyList());
+        defaultResponse.put("title", "");
+        defaultResponse.put("username", "");
 
-        return messageService.getMessagesByItemIdAndUserId(itemId, userId, user.getId());
+        try {
+            User user = userService.findCurrentUser();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(defaultResponse);
+            }
+            if (user.getId() == userId) {
+                return ResponseEntity.badRequest().body(defaultResponse);
+            }
 
+            Map<String, Object> response = messageService.getMessagesByItemIdAndUserId(itemId, userId, user.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(defaultResponse);
+        }
     }
 
     @GetMapping("/my-messages")

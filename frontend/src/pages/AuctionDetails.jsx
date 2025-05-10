@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import util from "../styles/util"
 import CountdownTimer from "../components/CountdownTimer"
 import { TimeProgressBar } from "../components/TimeProgressBar";
+import MapShow from "../components/MapShow";
 
 export const AuctionDetails = () => {
   const history = useHistory();
@@ -202,6 +203,8 @@ export const AuctionDetails = () => {
         startTime={auctionItem.startTime} 
         endTime={auctionItem.endTime} 
       />
+
+ 
       {/* Description & Details Sections */}
      
       <div className="space-y-8" >
@@ -263,34 +266,56 @@ export const AuctionDetails = () => {
             </div>     </div>
 
         {/* Location Map */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl  mb-4 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <MapIcon className="w-5 h-5 text-blue-600" />
             Location
           </h2>
           <div className="h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center">
-            <p className="text-gray-400">Map view coming soon</p>
+          {console.log(auctionItem?.latitude ,auctionItem?.longitude )}
+          <MapShow latitude={28.6139} longitude={77.2090} zoom={15} />          
           </div>
         </div>
 
         {/* Seller Info */}
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <UserIcon className="w-8 h-8 text-blue-600 bg-blue-100 p-1.5 rounded-full" />
-              <div>
-                <h3 className="font-semibold text-gray-900">{user?.username}</h3>
-                <p className="text-sm text-gray-500">Seller</p>
-              </div>
-            </div>
-            <button
-              onClick={(e) => goChatWithSeller(e)}
-              className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-            >
-              Chat with Seller
-            </button>
-          </div>
+  <div className="flex  items-center justify-between">
+    <div className="flex items-start gap-3">
+        {user?.profileImageUrl ? (
+          <img 
+            src={user.profileImageUrl}
+            alt="Profile"
+            className="w-8 h-8 rounded-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        ) : (
+          <UserIcon className="w-8 h-8 text-blue-600 bg-blue-100 p-1.5 rounded-full" />
+        )}
+           <div>
+        <h3 className="font-semibold text-gray-900">Username:{user?.username}</h3>
+        <p className="text-sm text-gray-500">Seller</p>
+        <div className="mt-2 text-sm text-gray-600 space-y-1">
+           <p><strong>Name:</strong> {user?.fullName || "N/A"}</p>
+
+          <p><strong>Email:</strong> {user?.email || "N/A"}</p>
+          <p><strong>Phone:</strong> {user?.phone || "N/A"}</p>
+          <p>
+            <strong>Address:</strong> {user?.city || "City"}, Maharashtra, India, {user?.postalCode || "XXXXXX"}
+          </p>
         </div>
+      </div>
+    </div>
+    <button
+      onClick={(e) => goChatWithSeller(e)}
+      className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+    >
+      Chat with Seller
+    </button>
+  </div>
+</div>
+
       </div>
     </div>
   );
