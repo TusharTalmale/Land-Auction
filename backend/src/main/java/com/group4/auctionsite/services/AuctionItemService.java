@@ -48,50 +48,50 @@ public class AuctionItemService {
         int numberOfBids = bidRepository.numberOfBidsByItemId(id);
         return auctionItem.get().toJson(highestBid, numberOfBids, winner);
     }
-//done its work
-public AuctionItem createAuctionItem(String auctionItem, long userId) {
-    LinkedHashMap x = (LinkedHashMap) objectMapperHelper.objectMapper(auctionItem);
+    //done its work
+    public AuctionItem createAuctionItem(String auctionItem, long userId) {
+        LinkedHashMap x = (LinkedHashMap) objectMapperHelper.objectMapper(auctionItem);
 
-    AuctionItem a = new AuctionItem();
-    a.setUserId(userId);
+        AuctionItem a = new AuctionItem();
+        a.setUserId(userId);
 
-    a.setTitle(x.get("title").toString());
-    a.setStartTime(new Date().getTime());
-    a.setEndTime(Long.parseLong(x.get("endTime").toString()));
-    a.setStartPrice(Integer.parseInt(x.get("startPrice").toString()));
+        a.setTitle(x.get("title").toString());
+        a.setStartTime(new Date().getTime());
+        a.setEndTime(Long.parseLong(x.get("endTime").toString()));
+        a.setStartPrice(Integer.parseInt(x.get("startPrice").toString()));
 
-    if (x.get("buyNowPrice") != null) a.setBuyNowPrice(Integer.parseInt(x.get("buyNowPrice").toString()));
-    if (x.get("imagePath") != null) a.setImagePath(x.get("imagePath").toString());
+        if (x.get("buyNowPrice") != null) a.setBuyNowPrice(Integer.parseInt(x.get("buyNowPrice").toString()));
+        if (x.get("imagePath") != null) a.setImagePath(x.get("imagePath").toString());
 
-    if (x.get("plotSize") != null) a.setPlotSize(x.get("plotSize").toString());
-    if (x.get("plotFacing") != null) a.setPlotFacing(x.get("plotFacing").toString());
-    if (x.get("address") != null) a.setAddress(x.get("address").toString());
-    if (x.get("city") != null) a.setCity(x.get("city").toString());
-    if (x.get("state") != null) a.setState(x.get("state").toString());
-    if (x.get("pinCode") != null) a.setPinCode(x.get("pinCode").toString());
-    if (x.get("landmarks") != null) a.setLandmarks(x.get("landmarks").toString());
-    if (x.get("ownershipType") != null) a.setOwnershipType(x.get("ownershipType").toString());
-    if (x.get("latitude") != null) a.setLatitude(Double.parseDouble(x.get("latitude").toString()));
-    if (x.get("longitude") != null) a.setLongitude(Double.parseDouble(x.get("longitude").toString()));
+        if (x.get("plotSize") != null) a.setPlotSize(x.get("plotSize").toString());
+        if (x.get("plotFacing") != null) a.setPlotFacing(x.get("plotFacing").toString());
+        if (x.get("address") != null) a.setAddress(x.get("address").toString());
+        if (x.get("city") != null) a.setCity(x.get("city").toString());
+        if (x.get("state") != null) a.setState(x.get("state").toString());
+        if (x.get("pinCode") != null) a.setPinCode(x.get("pinCode").toString());
+        if (x.get("landmarks") != null) a.setLandmarks(x.get("landmarks").toString());
+        if (x.get("ownershipType") != null) a.setOwnershipType(x.get("ownershipType").toString());
+        if (x.get("latitude") != null) a.setLatitude(Double.parseDouble(x.get("latitude").toString()));
+        if (x.get("longitude") != null) a.setLongitude(Double.parseDouble(x.get("longitude").toString()));
 
-    // Save auction item
-    a = auctionItemRepository.save(a);
+        // Save auction item
+        a = auctionItemRepository.save(a);
 
-    // Initial bid
-    bidRepository.save(new Bid(a.getId(), userId, a.getStartPrice()));
+        // Initial bid
+        bidRepository.save(new Bid(a.getId(), userId, a.getStartPrice()));
 
-    // Handle tags
-    if (x.get("tags") != null) {
-        String tagsx = x.get("tags").toString();
-        String[] tags = tagsx.split(" ");
-        List<Tag> tagList = tagService.createTags(tags);
-        for (Tag t : tagList) {
-            itemXTagRepository.save(new ItemXTag(t.getId(), a.getId()));
+        // Handle tags
+        if (x.get("tags") != null) {
+            String tagsx = x.get("tags").toString();
+            String[] tags = tagsx.split(" ");
+            List<Tag> tagList = tagService.createTags(tags);
+            for (Tag t : tagList) {
+                itemXTagRepository.save(new ItemXTag(t.getId(), a.getId()));
+            }
         }
-    }
 
-    return a;
-}
+        return a;
+    }
 
     public List<AuctionItem> createAuctionItems(List<AuctionItem> auctionItems) {
         List<AuctionItem> auctionItemsx = new ArrayList<>();
@@ -101,9 +101,9 @@ public AuctionItem createAuctionItem(String auctionItem, long userId) {
         }
         return  auctionItemsx;
     }
-    
+
     public String getAuctionItemsByUserId(long userId) {
-            List<String> updatedList=new ArrayList<>();
+        List<String> updatedList=new ArrayList<>();
 
         List<AuctionItem> itemList =auctionItemRepository.findAllByUserId(userId);
         for(AuctionItem item:itemList){
@@ -128,6 +128,7 @@ public AuctionItem createAuctionItem(String auctionItem, long userId) {
         User user = userRepository.findById(userId).get();
         long itemId;
         int bid;
+        long curTime =new Date().getTime();
 
         try{
             itemId = Long.parseLong(placedBid.get("itemId").toString());
@@ -152,7 +153,7 @@ public AuctionItem createAuctionItem(String auctionItem, long userId) {
         }
 
         if(highestBid > auctionItem.get().getStartPrice()) notificationService.createNotification(itemId, userId);
-        bidRepository.save(new Bid(itemId, userId, bid));
+        bidRepository.save(new Bid(itemId, userId, bid,curTime));
 
         return "{" +
                 "\"itemId\":" + itemId + "," +

@@ -86,6 +86,6 @@ public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> 
                                               @Param("offset") int offset);
 
     @Query(value = "SELECT auction_item.* FROM auction_item, bid WHERE NOT auction_item.user_id =?1 AND (item_id = auction_item.id AND bid.user_id = ?1 AND bid > 0)Group BY auction_item.id"
-    , nativeQuery = true)
+            , nativeQuery = true)
     List<AuctionItem> findByUserBuying(long userId);
 }

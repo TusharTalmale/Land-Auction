@@ -7,10 +7,11 @@ import BidModal from "../components/bidModal";
 import { socket } from "../socket";
 import { DocumentTextIcon, TagIcon, UserIcon, HomeIcon, MapIcon } from "@heroicons/react/solid";
 import { useHistory } from "react-router-dom";
-import util from "../styles/util"
+// import util from "../styles/util"
 import CountdownTimer from "../components/CountdownTimer"
 import { TimeProgressBar } from "../components/TimeProgressBar";
 import MapShow from "../components/MapShow";
+import BidHistory from "../components/BidHistory";
 
 export const AuctionDetails = () => {
   const history = useHistory();
@@ -203,7 +204,7 @@ export const AuctionDetails = () => {
         startTime={auctionItem.startTime} 
         endTime={auctionItem.endTime} 
       />
-
+<BidHistory itemId={id} />
  
       {/* Description & Details Sections */}
      

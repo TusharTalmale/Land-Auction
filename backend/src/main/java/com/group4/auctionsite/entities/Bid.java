@@ -23,11 +23,20 @@ public class Bid {
     private long itemId;
     private long userId;
     private int bid;
+    @Column(name = "curr_time")
+    private Long currTime;
 
     public Bid(long itemId, long userId, int bid) {
         this.itemId = itemId;
         this.userId = userId;
         this.bid = bid;
+        this.currTime = System.currentTimeMillis();
+    }
+    public Bid(long itemId, long userId, int bid,long currTime) {
+        this.itemId = itemId;
+        this.userId = userId;
+        this.bid = bid;
+        this.currTime = currTime;
     }
 
 }

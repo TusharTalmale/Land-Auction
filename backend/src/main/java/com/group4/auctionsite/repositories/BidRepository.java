@@ -20,4 +20,6 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     @Query(value = "SELECT bid FROM bid WHERE user_id = ?1 AND item_id = ?2 AND bid > 0 ORDER BY bid DESC LIMIT 1", nativeQuery = true)
     int findMaxBidByUserId(long userId, long itemId);
+    @Query("SELECT b FROM Bid b WHERE b.itemId = ?1")
+    List<Bid> findByItemId(long itemId);
 }
