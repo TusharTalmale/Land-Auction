@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { NotificationContext } from "../contexts/NotificationContext";
 import { socket } from "../socket";
 import logo from "../images/Logo1.png";
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -97,6 +98,15 @@ export default function Navbar() {
                     {page}
                   </button>
                 ))}
+                {currentUser && currentUser.role === 'ADMIN' && (
+                      <Link
+                        to="/admin"
+                        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-pink-500 hover:bg-pink-600 hover:bg-opacity-75 transition-colors duration-200 flex items-center"
+                      >
+                        {/* <CogIcon className="h-5 w-5 mr-1" aria-hidden="true" /> */}
+                        Admin
+                      </Link>
+                    )}
               </div>
             </div>
           </div>
@@ -197,6 +207,21 @@ export default function Navbar() {
                         )}
                       </Menu.Item>
                     ))}
+                     {currentUser.role === 'ADMIN' && (
+                                <Menu.Item>
+                                    {({ active }) => (
+                                    <Link
+                                        to="/admin"
+                                        className={`block w-full text-left px-4 py-2 text-sm ${
+                                        active ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700'
+                                        } flex items-center`}
+                                    >
+                                        {/* <CogIcon className="h-5 w-5 mr-2 text-gray-500" aria-hidden="true" /> */}
+                                        Admin Panel
+                                    </Link>
+                                    )}
+                                </Menu.Item>
+                            )}
                     <Menu.Item>
                       {({ active }) => (
                         <button

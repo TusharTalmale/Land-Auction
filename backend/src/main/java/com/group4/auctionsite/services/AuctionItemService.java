@@ -1,6 +1,8 @@
 package com.group4.auctionsite.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group4.auctionsite.dto.AuctionItemDto;
+import com.group4.auctionsite.dto.UserDto;
 import com.group4.auctionsite.entities.*;
 import com.group4.auctionsite.repositories.*;
 import com.group4.auctionsite.utils.FilterAuctionItem;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AuctionItemService {
@@ -35,7 +38,41 @@ public class AuctionItemService {
     public List<AuctionItem> getAllAuctionItems() {
         return auctionItemRepository.findAll();
     }
+    public Map<Long, List<AuctionItemDto>> getAllAuctionItemsGroupedByUser() {
+        List<AuctionItem> auctionItems = auctionItemRepository.findAll();
 
+        // Extract all unique user IDs from the auction items
+        Set<Long> userIds = auctionItems.stream()
+                .map(AuctionItem::getUserId)
+                .collect(Collectors.toSet());
+
+        // Fetch all necessary users in a single query
+        List<User> users = userRepository.findAllById(userIds);
+
+        // Create a map of userId to UserDto for quick lookup
+        Map<Long, UserDto> userDtoMap = users.stream()
+                .map(UserDto::new)
+                .collect(Collectors.toMap(UserDto::getId, userDto -> userDto));
+
+        // Convert entities to DTOs, populate user info, and then group them by userId
+        return auctionItems.stream()
+                .map(item -> {
+                    AuctionItemDto dto = new AuctionItemDto(item);
+                    // Find the corresponding UserDto and set it
+                    UserDto userDto = userDtoMap.get(item.getUserId());
+                    if (userDto != null) {
+                        dto.setUserInfo(userDto);
+                    }
+                    return dto;
+                })
+                // --- ADDED FILTERING STEP ---
+                // Filter out DTOs where userInfo is null (meaning the user was not found)
+                .filter(dto -> dto.getUserInfo() != null)
+                // --- END FILTERING STEP ---
+                .collect(Collectors.groupingBy(dto -> dto.getUserInfo().getId())); // Group by userId from UserDto (now guaranteed non-null)
+    }
+
+    
     public String getById(long id) {
         Optional<AuctionItem> auctionItem = auctionItemRepository.findById(id);
         User user = userService.findCurrentUser();
@@ -202,4 +239,5 @@ public class AuctionItemService {
         query[6] = filterContent.buttonSelection != null ? filterContent.buttonSelection : "default";
         return query;
     }
+
 }

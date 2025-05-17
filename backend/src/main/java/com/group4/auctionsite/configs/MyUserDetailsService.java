@@ -32,6 +32,17 @@ public class MyUserDetailsService implements UserDetailsService {
                     .build();
             addUser(user);
         }
+        // Admin User
+        if (userRepo.findByEmail("admin@example.com") == null) {
+            User adminUser = User.builder()
+                    .email("admin@example.com")
+                    .username("admin")
+                    .password("adminpass") // Will be encoded by addUser
+                    .role("ADMIN")         // ADMIN role
+                    .build();
+            addUser(adminUser);
+            System.out.println("Default admin user 'admin@example.com' created.");
+        }
     }
 
     @Override
@@ -62,6 +73,8 @@ public class MyUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles("USER").build();
+                .roles(user.getRole().toUpperCase())
+                .build();
+// Ensure role is uppercase
     }
 }

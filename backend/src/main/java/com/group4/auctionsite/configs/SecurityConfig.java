@@ -23,9 +23,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/", "/rest/**").permitAll()
-        .antMatchers(HttpMethod.POST, "/login").permitAll()     // doesn't require login
+        .antMatchers(HttpMethod.POST, "/login").permitAll().antMatchers(HttpMethod.POST, "/api/login", "/rest/user").permitAll() // Allow registration and login
+// doesn't require login
         .antMatchers("/auth/**").permitAll()     // doesn't require login
-        .antMatchers("/rest/**").permitAll() // user is logged in
+        .antMatchers("/rest/**").permitAll()
+            .antMatchers("/api/admin/**").hasRole("ADMIN")
+
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight requests
+            .anyRequest().authenticated() // All other requests need authentication
+            .and()
+            .formLogin().disable() // We are using a custom login endpoint
+            .httpBasic().disable()
         //.antMatchers("/buying").authenticated() // user is logged in
     ;
   }

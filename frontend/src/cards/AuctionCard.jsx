@@ -23,6 +23,7 @@ export const AuctionCard = ({ auction, sx }) => { // Added sx prop here
           alt={auction.title}
           className="w-full h-full rounded-xl object-cover"
         />
+        {console.log('a',auction)}
       </div>
 
       {/* Content Section */}
@@ -37,9 +38,10 @@ export const AuctionCard = ({ auction, sx }) => { // Added sx prop here
         {/* Price + Bid Count */}
         <div className="flex justify-between items-center">
           <span className="text-green-600 dark:text-green-400 font-bold text-base sm:text-lg">
-            {auction.highestBid === "0"
+            {/* {auction.highestBid === "0"
               ? ` ₹ ${auction.startPrice} `
-              : `₹ ${auction.highestBid} `}
+              : `₹ ${auction.highestBid} `} */}
+              ₹ {auction.startPrice}  
           </span>
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {auction.numberOfBids} bid{auction.numberOfBids !== 1 && "s"}

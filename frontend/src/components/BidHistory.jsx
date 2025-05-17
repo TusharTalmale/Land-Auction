@@ -52,7 +52,7 @@ const BidHistory = ({ itemId }) => {
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border rounded-lg mt-4 mb-5 overflow-hidden">
       <div className="bg-gray-100 p-3 border-b">
         <h3 className="font-semibold text-gray-800">Bid History</h3>
       </div>

@@ -274,7 +274,11 @@ export const AuctionDetails = () => {
           </h2>
           <div className="h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center">
           {console.log(auctionItem?.latitude ,auctionItem?.longitude )}
-          <MapShow latitude={28.6139} longitude={77.2090} zoom={15} />          
+        <MapShow 
+  latitude={auctionItem?.latitude}  // Can be string or number
+  longitude={auctionItem?.longitude} // Can be string or number
+  zoom={15}
+/>    
           </div>
         </div>
 

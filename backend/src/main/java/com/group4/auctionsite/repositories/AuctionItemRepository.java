@@ -2,7 +2,10 @@ package com.group4.auctionsite.repositories;
 
 import com.group4.auctionsite.entities.AuctionItem;
 import com.group4.auctionsite.entities.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> {
+public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> , JpaSpecificationExecutor<AuctionItem> {
 
     AuctionItem save(AuctionItem auctionItem);
 
@@ -88,4 +91,21 @@ public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> 
     @Query(value = "SELECT auction_item.* FROM auction_item, bid WHERE NOT auction_item.user_id =?1 AND (item_id = auction_item.id AND bid.user_id = ?1 AND bid > 0)Group BY auction_item.id"
             , nativeQuery = true)
     List<AuctionItem> findByUserBuying(long userId);
+
+    @Query("SELECT a FROM AuctionItem a WHERE " +
+            "(:title IS NULL OR lower(a.title) LIKE lower(concat('%', :title, '%'))) AND " +
+            "(:city IS NULL OR lower(a.city) LIKE lower(concat('%', :city, '%'))) AND " +
+            "(:plotFacing IS NULL OR a.plotFacing = :plotFacing) AND " +
+            "(:minPrice IS NULL OR a.startPrice >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR a.startPrice <= :maxPrice) AND " +
+            "(:active IS NULL OR (:active = TRUE AND a.endTime > :currentTime) OR (:active = FALSE AND a.endTime <= :currentTime))")
+    List<AuctionItem> findFiltered(
+            @Param("title") String title,
+            @Param("city") String city,
+            @Param("plotFacing") String plotFacing, // Note: Cannot use Optional<String> directly in @Param
+            @Param("minPrice") Integer minPrice,
+            @Param("maxPrice") Integer maxPrice,
+            @Param("active") Boolean active,
+            @Param("currentTime") Long currentTime // Need to pass current time for active filter
+    );
 }

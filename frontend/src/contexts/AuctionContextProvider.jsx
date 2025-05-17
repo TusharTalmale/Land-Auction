@@ -13,6 +13,7 @@ export default function AuctionContextProvider(props) {
             res = await res.json();
             if (res) {
                 setAuctions(res)
+                
             }
         } catch {
         }

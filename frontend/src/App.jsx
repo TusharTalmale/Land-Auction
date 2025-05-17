@@ -28,6 +28,9 @@ import Footer from "./components/Footer";
 // import { LandAuctionDetails } from "./pages/LandAuctionDetails";
 import { UserProfilePage } from "./pages/Userpage";
 import ErrorBoundary from "./contexts/ErrorBoundary";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
+import IntroPage from "./pages/IntroPage";
 
 
 function App() {
@@ -46,6 +49,7 @@ function App() {
                     <Router>
                       <Navbar />
                       <Switch>
+                          <Route exact path="/Intro" component={IntroPage} />
                         <Route exact path="/" component={Home} />
                         <Route exact path="/auction-details/:id" component={AuctionDetails} />
                         {/* <Route exact path="/land-details/:id" component={LandAuctionDetails} /> */}
@@ -59,6 +63,12 @@ function App() {
                         <Route exact path="/About" component={About} />
                         <Route exact path="/API" component={API} />
                         <Route exact path="/me" component={UserProfilePage} />
+                        <ProtectedRouteAdmin exact path="/admin" component={AdminDashboard} />
+                        <ProtectedRouteAdmin exact path="/admin/users" component={AdminDashboard} />
+
+
+
+
                         <Route path="*" component={NotFound404} />
                       </Switch>
                       <Footer/>
