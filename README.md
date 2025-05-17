@@ -4,6 +4,37 @@
 
 A modern land auction platform built with **Spring Boot** (backend) and **React** (frontend). This open-source project provides a foundation for managing online land auctions with real-time bidding capabilities.
 
+
+## Key Features:
+- Sellers can:
+  - Upload land details 
+      - photos
+      - land details
+      - location details
+      - intractive map pointings 
+  - Set minimum bidding price
+  - Mark plots on a satellite map
+  - view auction details
+  - can view current listings 
+  - can iew past listing
+  - added massage sections can msg to bidders
+
+-  Bidder can:
+    - View detailed listings
+    - Track highest bids in real time
+    - Participate in a bidding window
+      - must bid gretter than minimum bid
+    - can view won as well as  lost auction in saparate component
+    - can chat end to end with seller 
+
+- Admins can:
+  - Monitor auctions
+
+
+
+
+
+
 ## ✨ Why This Project?
 
 - Simplifies the land auction process with geospatial visualization (Leaflet maps)
@@ -57,14 +88,16 @@ npm run dev
 The application will be available at:
 - Backend: http://localhost:4000
 - Frontend: http://localhost:3000
-
-## 🌟 Key Features
+##### Features
 - User authentication (JWT)
 - Land listing with map visualization (Leaflet)
 - Real-time bidding (Socket.IO)
 - Form validation
 - Responsive UI (Material-UI + TailwindCSS)
 - Date/time handling (date-fns)
+
+
+
 
 ## 🗃️ Database Configuration
 The application uses embedded SQLite by default. The database file will be automatically created .
